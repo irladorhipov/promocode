@@ -29,7 +29,7 @@ class AuthService
     /**
      * @param string $email
      * @param string $password
-     * @return string
+     * @return array
      * @throws \Exception
      */
     public function login(string $email, string $password): array

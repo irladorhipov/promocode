@@ -28,15 +28,15 @@ class PromoCodeService
             $promoCode = PromoCode::where('code', $code)->firstOrFail();
 
             if ($user->promoCodeActivations()->where('promo_code_id', $promoCode->id)->exists()) {
-                throw new Exception('Промокод уже был активирован');
+                throw new Exception('Promo code has already been activated');
             }
 
             if ($promoCode->valid_to && $promoCode->valid_to < now()) {
-                throw new Exception('Срок действия промокода истек');
+                throw new Exception('Promo code has expired');
             }
 
             if ($promoCode->max_activations && $promoCode->activation_count >= $promoCode->max_activations) {
-                throw new Exception('Лимит активаций промокода исчерпан');
+                throw new Exception('Promo code activation limit has been reached');
             }
 
             $activation = new PromoCodeActivation([
@@ -54,7 +54,7 @@ class PromoCodeService
             DB::commit();
 
             return [
-                'message' => 'Промокод успешно активирован',
+                'message' => 'Promo code successfully activated',
                 'balance' => $user->balance,
             ];
 
