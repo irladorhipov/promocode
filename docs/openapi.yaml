@@ -1,0 +1,252 @@
+openapi: 3.0.0
+info:
+  title: REST API
+  version: 1.0.0
+  description: REST API
+servers:
+  - url: http://localhost/api
+    description: Local development server
+paths:
+  /login:
+    post:
+      summary: Authenticate user and return JWT token
+      description: Authenticates a user by email and password, and returns a JWT token along with user data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The user's email address.
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  description: The user's password.
+                  example: password123
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userData:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier of the user.
+                        example: 13
+                      name:
+                        type: string
+                        description: The name of the user.
+                        example: name
+                      balance:
+                        type: string
+                        description: The balance of the user.
+                        example: "250.00"
+                      email:
+                        type: string
+                        format: email
+                        description: The email address of the user.
+                        example: testemal@test.ru
+                      created_at:
+                        type: string
+                        format: date-time
+                        description: The timestamp when the user was created.
+                        example: "2025-01-26T19:55:07.000000Z"
+                      updated_at:
+                        type: string
+                        format: date-time
+                        description: The timestamp when the user was last updated.
+                        example: "2025-01-26T20:16:19.000000Z"
+                  token:
+                    type: string
+                    description: JWT token for authenticated user.
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /signup:
+    post:
+      summary: Register a new user
+      description: Registers a new user with the provided name, email, and password.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  description: The name of the user.
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  description: The email address of the user.
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  description: The password for the user.
+                  example: password123
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier of the user.
+                        example: 14
+                      name:
+                        type: string
+                        description: The name of the user.
+                        example: John Doe
+                      email:
+                        type: string
+                        format: email
+                        description: The email address of the user.
+                        example: user@example.com
+                      created_at:
+                        type: string
+                        format: date-time
+                        description: The timestamp when the user was created.
+                        example: "2025-01-26T19:55:07.000000Z"
+                      updated_at:
+                        type: string
+                        format: date-time
+                        description: The timestamp when the user was last updated.
+                        example: "2025-01-26T20:16:19.000000Z"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Validation failed
+                  errors:
+                    type: object
+                    description: Detailed validation errors.
+                    example:
+                      email: ["The email must be a valid email address."]
+                      password: ["The password must be at least 6 characters."]
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Internal Server Error
+
+  /promo-code/activate:
+    post:
+      summary: Activate a promo code
+      description: Activates a promo code for a specific user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - code
+              properties:
+                user_id:
+                  type: integer
+                  description: The unique identifier of the user.
+                  example: 13
+                code:
+                  type: string
+                  description: The promo code to activate.
+                  example: SUMMER2023
+      responses:
+        '200':
+          description: Promo code activated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates whether the promo code was activated successfully.
+                    example: true
+                  message:
+                    type: string
+                    description: A message describing the result of the activation.
+                    example: Promo code activated successfully.
+                  data:
+                    type: object
+                    description: Additional data related to the activation (if any).
+                    example:
+                      discount: 10
+                      expires_at: "2025-12-31T23:59:59.000000Z"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message describing why the activation failed.
+                    example: Invalid promo code or user.
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Internal server error message.
+                    example: Internal Server Error
