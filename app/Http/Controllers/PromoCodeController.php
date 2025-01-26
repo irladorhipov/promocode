@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\PromoCodeService;
 use App\Http\Requests\PromoCodeActivationRequest;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class PromoCodeController extends Controller
 {
@@ -19,10 +20,10 @@ class PromoCodeController extends Controller
 
         try {
             $result = $promoCodeService->activate($validatedData['user_id'], $validatedData['code']);
-            return response()->json($result, 200);
+            return response()->json($result, Response::HTTP_OK);
 
         } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 400);
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
 }
