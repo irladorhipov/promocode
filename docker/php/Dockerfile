@@ -20,11 +20,11 @@ RUN pecl install redis && docker-php-ext-enable redis
 
 WORKDIR /var/www/html
 
-COPY composer.json composer.lock ./
+COPY ../../composer.json composer.lock ./
 
 RUN composer install --no-scripts --no-autoloader
 
-COPY . .
+COPY ../.. .
 
 RUN composer dump-autoload --optimize
 
