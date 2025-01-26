@@ -9,12 +9,12 @@ docker-compose up -d
 
 2. **Сгенерируйте ключ приложения:**
 ```bash
-docker-compose up -d
+php artisan key:generate
 ```
 
 3. **Запустите миграции и сидеры:**
 ```bash
-docker-compose up -d
+php artisan migrate --seed
 ```
 
 
